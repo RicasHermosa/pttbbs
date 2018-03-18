@@ -357,7 +357,7 @@ set_board(void)
     getdata(0, 0, "進入隱藏看板，請輸入正當理由:", reason, 40, DOECHO);
     fprintf(fp2,"\n%s進入隱藏看板：%s，理由是%s\n", cuser.userid, brdname, reason);
 	fclose(fp2);
-	return 1;
+    sprintf(buf, "%s 進入隱藏看板：%s", cuser.userid, brdname);
     post_file(BN_SECURITY, buf, "etc/intoHide.log", "[警告] 有人進入隱版");
 	}
 
