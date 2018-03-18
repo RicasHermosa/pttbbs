@@ -349,10 +349,10 @@ set_board(void)
     clear();
 
     unlink("etc/intoHide.log");
-    fp2 = fopen("etc/intoHide.log", "w")
+    fp2 = fopen("etc/intoHide.log", "w");
 
     getdata(0, 0, "進入隱藏看板，請輸入正當理由:", reason, 40, DOECHO);
-    fprintf(fp2,"\n%s進入隱藏看板：%s，理由是%s\n", cuser.userid, brdname, reason);
+    fprintf(fp2,"\n%s進入隱藏看板：%s，理由是%s\n", cuser.userid, bp->brdname, reason);
 	fclose(fp2);
     post_file(BN_SECURITY, cuser.userid, "etc/intoHide.log", "[警告] 有人進入隱版");
 	}
