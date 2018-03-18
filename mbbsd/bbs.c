@@ -342,8 +342,24 @@ set_board(void)
     if( HasUserPerm(PERM_SYSOP) &&
 	(bp->brdattr & BRD_HIDE) &&
 	!is_BM_cache(bp - bcache + 1) &&
-	!is_hidden_board_friend((int)(bp - bcache) + 1, currutmp->uid) )
-	vmsg("進入未經授權看板");
+	!is_hidden_board_friend((int)(bp - bcache) + 1, currutmp->uid) ){
+	FILE           *fp, *fp2;
+    char            reason[100];
+	if (veditfile("etc/intoHide.txt") < 0)
+	    return 1;
+
+    clear();
+
+    unlink("etc/intoHide.log");
+    if (!(fp2 = fopen("etc/intoHide.log", "w")))
+	return 1;
+
+    getdata(0, 0, "進入隱藏看板，請輸入正當理由:", reason, 40, DOECHO);
+    fprintf(fp2,"\n%s進入隱藏看板：%s，理由是%s\n", cuser.userid, brdname, reason);
+	fclose(fp2);
+	return 1;
+    post_file(BN_SECURITY, buf, "etc/intoHide.log", "[警告] 有人進入隱版");
+	}
 
     board_note_time = &bp->bupdate;
 
