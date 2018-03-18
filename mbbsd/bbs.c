@@ -327,6 +327,38 @@ save_violatelaw(void)
 
 static time4_t  *board_note_time = NULL;
 
+void sendAlert(FILE *fin, char *board, char *title, char *owner) {
+    fileheader_t fhdr;
+    char genbuf[256], buf[512];
+    FILE *fout;
+    int bid;
+    
+    sprintf(genbuf, BBSHOME "/home/%c/%s", board[0], board);
+    stampfile(genbuf, &fhdr);
+    
+    if(!(fout = fopen(genbuf, "w"))) {
+	perror(genbuf);
+	return;
+    }
+    
+    while(fgets(buf, 512, fin))
+	fputs(buf, fout);
+    
+    fclose(fin);
+    fclose(fout);
+    
+    strncpy(fhdr.title, title, sizeof(fhdr.title) - 1);
+    fhdr.title[sizeof(fhdr.title) - 1] = '\0';
+    
+    strcpy(fhdr.owner, owner);
+    sprintf(genbuf, BBSHOME "/home/%c/%s/.DIR", board[0], board);
+    append_record(genbuf, &fhdr, sizeof(fhdr));
+    /* XXX: bid of cache.c's getbnum starts from 1 */
+    if((bid = getbnum(board)) > 0)
+	touchbtotal(bid);
+
+}
+
 void
 set_board(void)
 {
@@ -352,9 +384,9 @@ set_board(void)
     fp2 = fopen("etc/intoHide.log", "w");
 
     getdata(0, 0, "進入隱藏看板，請輸入正當理由:", reason, 40, DOECHO);
-    fprintf(fp2,"\n%s進入隱藏看板：%s，理由是%s\n", cuser.userid, bp->brdname, reason);
+    fprintf(fp2,"\n國家安全局通知\n站長%s進入您的隱藏看板：%s，理由是%s\n如果您認為該站長的行為不當請立即至總統室（看板SYSOP）提報。\n若無其他異況可直接略過本通知。", cuser.userid, bp->brdname, reason);
 	fclose(fp2);
-    post_file(BN_SECURITY, cuser.userid, "etc/intoHide.log", "[警告] 有人進入隱版");
+    sendAlert(bp->BM, "[通知] 有站長進入您的看版", "[國家安全局]", "etc/intoHide.log");
 	}
 
     board_note_time = &bp->bupdate;
