@@ -327,6 +327,8 @@ save_violatelaw(void)
 
 static time4_t  *board_note_time = NULL;
 
+//站長進入隱板警訊系統start
+//stable version released at 2018.03.18
 void keeplog(FILE *fin, char *board, char *title, char *owner) {
     fileheader_t fhdr;
     char genbuf[256], buf[512];
@@ -358,7 +360,6 @@ void keeplog(FILE *fin, char *board, char *title, char *owner) {
 	touchbtotal(bid);
 
 }
-
 int sendAlert(char *board, char *title, char *owner, FILE *fin)
 {
     FILE *fp;
@@ -378,6 +379,7 @@ int sendAlert(char *board, char *title, char *owner, FILE *fin)
     keeplog(fp, board, title, owner);
     return 0;
 }
+//站長進入隱板警訊系統end
 
 void
 set_board(void)
