@@ -359,27 +359,23 @@ void keeplog(FILE *fin, char *board, char *title, char *owner) {
 
 }
 
-int sendAlert(int argc, char **argv)
+int sendAlert(char *board, char *title, char *owner, FILE *fin)
 {
     FILE *fp;
 
     attach_SHM();
     resolve_boards();
-    if(argc != 5) {
-	printf("usage: %s <board name> <title> <owner> <file>\n", argv[0]);
-	return 0;
-    }
     
-    if(strcmp(argv[4], "-") == 0)
+    if(strcmp(fin, "-") == 0)
 	fp = stdin;
     else {
-	fp = fopen(argv[4], "r");
+	fp = fopen(fin, "r");
 	if(!fp) {
-	    perror(argv[4]);
+	    perror(fin);
 	    return 1;
 	}
     }
-    keeplog(fp, argv[1], argv[2], argv[3]);
+    keeplog(fp, board, title, owner);
     return 0;
 }
 
