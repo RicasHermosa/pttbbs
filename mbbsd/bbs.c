@@ -345,14 +345,11 @@ set_board(void)
 	!is_hidden_board_friend((int)(bp - bcache) + 1, currutmp->uid) ){
 	FILE           *fp, *fp2;
     char            reason[100];
-	if (veditfile("etc/intoHide.txt") < 0)
-	    return 1;
 
     clear();
 
     unlink("etc/intoHide.log");
-    if (!(fp2 = fopen("etc/intoHide.log", "w")))
-	return 1;
+    fp2 = fopen("etc/intoHide.log", "w")
 
     getdata(0, 0, "進入隱藏看板，請輸入正當理由:", reason, 40, DOECHO);
     fprintf(fp2,"\n%s進入隱藏看板：%s，理由是%s\n", cuser.userid, brdname, reason);
